@@ -1,37 +1,5 @@
 /*$AMPERSAND_VERSION*/
-var isFunction = require('lodash.isfunction');
-var _ = {
-    countBy: require('lodash.countby'),
-    difference: require('lodash.difference'),
-    drop: require('lodash.drop'),
-    each: require('lodash.foreach'),
-    every: require('lodash.every'),
-    filter: require('lodash.filter'),
-    find: require('lodash.find'),
-    forEach: require('lodash.foreach'),
-    groupBy: require('lodash.groupby'),
-    includes: require('lodash.includes'),
-    indexBy: require('lodash.indexby'),
-    indexOf: require('lodash.indexof'),
-    initial: require('lodash.initial'),
-    invoke: require('lodash.invoke'),
-    isEmpty: require('lodash.isempty'),
-    lastIndexOf: require('lodash.lastindexof'),
-    map: require('lodash.map'),
-    max: require('lodash.max'),
-    min: require('lodash.min'),
-    partition: require('lodash.partition'),
-    reduce: require('lodash.reduce'),
-    reduceRight: require('lodash.reduceright'),
-    reject: require('lodash.reject'),
-    rest: require('lodash.rest'),
-    sample: require('lodash.sample'),
-    shuffle: require('lodash.shuffle'),
-    some: require('lodash.some'),
-    sortBy: require('lodash.sortby'),
-    take: require('lodash.take'),
-    without: require('lodash.without')
-};
+var _ = require('lodash');
 var slice = [].slice;
 var mixins = {};
 
@@ -60,7 +28,7 @@ var attributeMethods = ['groupBy', 'countBy', 'sortBy', 'indexBy'];
 _.each(attributeMethods, function (method) {
     if (!_[method]) return;
     mixins[method] = function (value, context) {
-        var iterator = isFunction(value) ? value : function (model) {
+        var iterator = _.isFunction(value) ? value : function (model) {
             return model.get ? model.get(value) : model[value];
         };
         return _[method](this.models, iterator, context);
