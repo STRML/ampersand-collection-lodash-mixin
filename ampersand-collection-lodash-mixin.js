@@ -7,7 +7,7 @@ var mixins = {};
 // lodash methods that we want to implement on the Collection.
 var methods = ['forEach', 'each', 'map', 'reduce', 'reduceRight', 'find',
     'filter', 'reject', 'every', 'some', 'includes', 'invoke', 'max', 'min',
-    'take', 'initial', 'rest', 'drop', 'without', 'difference', 'indexOf', 'shuffle',
+    'take', 'initial', 'tail', 'drop', 'without', 'difference', 'indexOf', 'shuffle',
     'lastIndexOf', 'isEmpty', 'sample', 'partition'
 ];
 
@@ -15,14 +15,18 @@ var methods = ['forEach', 'each', 'map', 'reduce', 'reduceRight', 'find',
 _.each(methods, function (method) {
     if (!_[method]) return;
     mixins[method] = function () {
-        var args = slice.call(arguments);
-        args.unshift(this.models);
+        var len = arguments.length;
+        var args = Array(len + 1);
+        args[0] = this.models;
+        for (var i = 0; i < len; i++) {
+            args[i + 1] = arguments[i];
+        }
         return _[method].apply(_, args);
     };
 });
 
 // lodash methods that take a property name as an argument.
-var attributeMethods = ['groupBy', 'countBy', 'sortBy', 'indexBy'];
+var attributeMethods = ['groupBy', 'countBy', 'sortBy', 'keyBy'];
 
 // Use attributes instead of properties.
 _.each(attributeMethods, function (method) {
@@ -57,7 +61,7 @@ mixins.findWhere = function (attrs) {
 
 // Plucks an attribute from each model in the collection.
 mixins.pluck = function (attr) {
-    return _.invoke(this.models, 'get', attr);
+    return _.invokeMap(this.models, 'get', attr);
 };
 
 // We implement the following trivial methods ourselves.
